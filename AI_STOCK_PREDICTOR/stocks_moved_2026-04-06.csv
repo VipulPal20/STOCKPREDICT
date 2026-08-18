@@ -1,0 +1,13 @@
+symbol , company     , buy   , buy time        , sell  , sell time       , profit, percent, vol sod, vol sell
+AAPL   , Apple Inc.  ,  145.0, 2026-04-06T10:30,  150.0, 2026-04-06T14:30, 5.0   , 3.45   ,    1000,     1200
+MSFT   , Microsoft   ,  300.0, 2026-04-06T10:30,  310.0, 2026-04-06T14:30, 10.0  , 3.33   ,    1000,     1200
+GOOG   , Alphabet Inc, 2000.0, 2026-04-06T10:30, 1950.0, 2026-04-06T14:30, -50.0 , -2.5   ,    1000,     1200
+
+PERCENT, 2.15
+EQUITY , 5107.50
+
+SUM    , +10.0
+AVG    , +3.33
+
+BUY    , $12225.0
+SELL   , $12050.0

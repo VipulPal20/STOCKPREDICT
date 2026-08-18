@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockkd | Settings</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/stockkd_logo.png">
+    <style>
+        body { overflow: auto; }
+        .settings-wrap {
+            max-width: 700px;
+            margin: 2rem auto;
+            padding: 0 1.5rem 4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .settings-title { font-size: 1.8rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 0.25rem; }
+        .settings-sub   { color: var(--text-muted); font-size: 0.95rem; }
+        .card-section   { padding: 1.8rem; display: flex; flex-direction: column; gap: 1.2rem; }
+        .section-head   { display: flex; align-items: center; gap: 12px; }
+        .section-head h2 { font-size: 1.1rem; font-weight: 700; }
+        .tag { padding: 3px 10px; border-radius: 20px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; }
+        .tag-green { background: rgba(16,185,129,0.12); color: var(--positive); border: 1px solid rgba(16,185,129,0.25); }
+        .section-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+        .section-desc a { color: var(--accent); text-decoration: none; }
+        .field { display: flex; flex-direction: column; gap: 6px; }
+        .field label { font-size: 0.8rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+        .field input {
+            padding: 12px 14px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: monospace;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .field input:focus { border-color: var(--accent); }
+        .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-primary {
+            background: rgba(59,130,246,0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59,130,246,0.35);
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+        }
+        .btn-primary:hover { background: rgba(59,130,246,0.25); color: #fff; }
+        .btn-success {
+            background: rgba(16,185,129,0.12);
+            color: var(--positive);
+            border: 1px solid rgba(16,185,129,0.3);
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+        }
+        .btn-success:hover { background: rgba(16,185,129,0.22); color: #fff; }
+        .status-box {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .status-ok  { background: rgba(16,185,129,0.12); color: #22c55e; border: 1px solid rgba(16,185,129,0.2); }
+        .status-err { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.2); }
+        .info-box {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+        .info-box p { font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .info-box ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+        .info-box li { font-size: 0.83rem; color: var(--text-muted); }
+        .info-box code { color: var(--highlight); font-size: 0.82rem; }
+    </style>
+</head>
+<body>
+    <nav class="top-nav glass">
+        <div class="nav-content">
+            <div class="brand">
+                <img src="/static/stockkd_logo.png" alt="Stockkd" class="brand-logo">
+                <span class="brand-text">stockk<span class="highlight">d</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Markets</a>
+                <a href="/algo">Algorithms</a>
+                <a href="/settings" class="active">Settings</a>
+            </div>
+            <div class="user-status">
+                <span class="status-indicator"></span>
+                <span>Live Data</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="settings-wrap">
+        <div>
+            <p class="settings-title">Settings</p>
+            <p class="settings-sub">Configure API keys and trading parameters.</p>
+        </div>
+
+        <!-- Alpha Vantage -->
+        <div class="glass card-section">
+            <div class="section-head">
+                <h2>Alpha Vantage — Real-Time API</h2>
+                <span class="tag tag-green">LIVE QUOTES</span>
+            </div>
+            <p class="section-desc">
+                Powers real-time price, OHLC and volume on the chart.<br>
+                Free tier: 25 requests/day &nbsp;·&nbsp;
+                <a href="https://www.alphavantage.co/support/#api-key" target="_blank">Get a free key →</a>
+            </p>
+
+            <div class="field">
+                <label>API Key</label>
+                <input type="text" id="av-api-key" placeholder="e.g. ABCDEF1234567890">
+            </div>
+
+            <div id="av-status" class="status-box"></div>
+
+            <div class="btn-row">
+                <button class="btn-primary" id="save-av-btn">Save Key</button>
+                <button class="btn-success" id="test-av-btn">Test Connection</button>
+            </div>
+
+            <div class="info-box">
+                <p>How it works</p>
+                <ul>
+                    <li>• Real-time quotes are fetched when you select a stock on the chart</li>
+                    <li>• Responses are cached for 5 min to protect your daily quota</li>
+                    <li>• Historical chart data always uses the local NSE dataset</li>
+                    <li>• NSE symbols are queried as <code>SYMBOL.BSE</code> on Alpha Vantage</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Risk Management -->
+        <div class="glass card-section">
+            <div class="section-head">
+                <h2>Risk Management</h2>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div class="field">
+                    <label>Max Price Per Symbol (₹)</label>
+                    <input type="number" id="max-price" value="15000" style="font-family:'Outfit',sans-serif;">
+                </div>
+                <div class="field">
+                    <label>Trading Equity (₹)</label>
+                    <input type="number" id="equity" value="500000" style="font-family:'Outfit',sans-serif;">
+                </div>
+                <div class="field">
+                    <label>Sell Trigger (%)</label>
+                    <input type="number" id="sell-trigger" value="3.0" step="0.1" style="font-family:'Outfit',sans-serif;">
+                </div>
+                <div class="field">
+                    <label>Max Stocks to Hold</label>
+                    <input type="number" id="max-stocks" value="10" style="font-family:'Outfit',sans-serif;">
+                </div>
+            </div>
+            <div class="btn-row">
+                <button class="btn-primary" id="save-risk-btn">Save Parameters</button>
+            </div>
+            <div id="risk-status" class="status-box"></div>
+        </div>
+    </div>
+
+    <script>
+        // ── helpers ──────────────────────────────────────────────────────────
+        function setStatus(id, msg, ok) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.className = 'status-box ' + (ok ? 'status-ok' : 'status-err');
+            el.style.display = 'block';
+        }
+
+        // ── load saved key on page open ───────────────────────────────────────
+        fetch('/api/settings')
+            .then(r => r.json())
+            .then(d => {
+                if (d.AV_API_KEY) {
+                    document.getElementById('av-api-key').value = d.AV_API_KEY;
+                    setStatus('av-status', '✓ API key loaded from saved config.', true);
+                }
+            })
+            .catch(() => setStatus('av-status', 'Could not reach server.', false));
+
+        // ── save key ──────────────────────────────────────────────────────────
+        document.getElementById('save-av-btn').addEventListener('click', () => {
+            const key = document.getElementById('av-api-key').value.trim();
+            if (!key) { setStatus('av-status', 'Please enter an API key.', false); return; }
+
+            fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ AV_API_KEY: key })
+            })
+            .then(r => r.json())
+            .then(d => {
+                if (d.status === 'success') setStatus('av-status', '✓ Key saved successfully.', true);
+                else setStatus('av-status', 'Error: ' + d.message, false);
+            })
+            .catch(() => setStatus('av-status', 'Failed to reach server.', false));
+        });
+
+        // ── test connection ───────────────────────────────────────────────────
+        document.getElementById('test-av-btn').addEventListener('click', () => {
+            setStatus('av-status', 'Testing connection…', true);
+            fetch('/api/realtime/RELIANCE')
+                .then(r => r.json())
+                .then(d => {
+                    if (d.error) setStatus('av-status', '✗ ' + d.error, false);
+                    else setStatus('av-status',
+                        `✓ Connected — RELIANCE.BSE  ₹${d.price.toFixed(2)}  (${d.change_pct >= 0 ? '+' : ''}${parseFloat(d.change_pct).toFixed(2)}%)  as of ${d.latest_day}`,
+                        true);
+                })
+                .catch(() => setStatus('av-status', '✗ Request failed. Is the server running?', false));
+        });
+
+        // ── risk params (saved to localStorage for now) ───────────────────────
+        const riskKeys = ['max-price', 'equity', 'sell-trigger', 'max-stocks'];
+        riskKeys.forEach(k => {
+            const saved = localStorage.getItem('risk_' + k);
+            if (saved) document.getElementById(k).value = saved;
+        });
+
+        document.getElementById('save-risk-btn').addEventListener('click', () => {
+            riskKeys.forEach(k => localStorage.setItem('risk_' + k, document.getElementById(k).value));
+            setStatus('risk-status', '✓ Parameters saved.', true);
+        });
+    </script>
+</body>
+</html>

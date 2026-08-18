@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockkd | Algorithms</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/stockkd_logo.png">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob shape1"></div>
+        <div class="blob shape2"></div>
+        <div class="blob shape3"></div>
+    </div>
+    
+    <nav class="top-nav glass">
+        <div class="nav-content">
+            <div class="brand">
+                <img src="/static/stockkd_logo.png" alt="Stockkd Logo" class="brand-logo">
+                <span class="brand-text">stockk<span class="highlight">d</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="/">Dashboard</a>
+                <a href="/algo" class="active">Algorithms</a>
+                <a href="/settings">Settings</a>
+            </div>
+            <div class="user-status">
+                <span class="status-indicator"></span>
+                <span>System Online</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard">
+        <header class="main-header">
+            <div>
+                <h1>Algorithm Selector</h1>
+                <p>Manage and activate the core mathematical logic driving trades.</p>
+            </div>
+        </header>
+
+        <section class="metrics" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+            <div class="card glass" style="border: 1px solid var(--accent); background: rgba(59, 130, 246, 0.1);">
+                <div class="card-icon">⚡</div>
+                <div class="card-content">
+                    <h3 style="color: var(--text-primary);">"Moved" Momentum Model</h3>
+                    <p style="font-size: 1rem; color: var(--text-secondary); margin-top: 5px; line-height: 1.5;">Targets Top-N stocks that moved the highest percentage over the trailing 5 closing days.</p>
+                    <div style="margin-top: 15px; display: inline-block; padding: 4px 12px; background: rgba(16, 185, 129, 0.2); color: var(--positive); border-radius: 12px; font-size: 0.8rem; font-weight: 600;">ACTIVE IN CORE</div>
+                </div>
+            </div>
+            
+            <div class="card glass">
+                <div class="card-icon">📉</div>
+                <div class="card-content">
+                    <h3>Low-to-Market Reversion</h3>
+                    <p style="font-size: 1rem; color: var(--text-secondary); margin-top: 5px; line-height: 1.5;">Targets intraday pullbacks relative to total market conditions for quick entry reversals.</p>
+                </div>
+            </div>
+            
+            <div class="card glass">
+                <div class="card-icon">🚀</div>
+                <div class="card-content">
+                    <h3>Low-to-High Volatility Breakout</h3>
+                    <p style="font-size: 1rem; color: var(--text-secondary); margin-top: 5px; line-height: 1.5;">Capitalizes on massive daily ranges, prioritizing stocks showing extreme vertical volatility.</p>
+                </div>
+            </div>
+            
+            <div class="card glass">
+                <div class="card-icon">🪙</div>
+                <div class="card-content">
+                    <h3>Crypto Alpaca Scan <span class="symbol-badge" style="margin-left: 8px;">BETA</span></h3>
+                    <p style="font-size: 1rem; color: var(--text-secondary); margin-top: 5px; line-height: 1.5;">Scans all available liquidity pools from Alpaca REST v2 /crypto endpoints for immediate swing trades.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockkd | Market Intelligence</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/stockkd_logo.png">
+    <script src="https://unpkg.com/lightweight-charts@4.1.3/dist/lightweight-charts.standalone.production.js"></script>
+</head>
+<body>
+    <nav class="top-nav glass">
+        <div class="nav-content">
+            <div class="brand">
+                <img src="/static/stockkd_logo.png" alt="Stockkd" class="brand-logo">
+                <span class="brand-text">stockk<span class="highlight">d</span></span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="active">Markets</a>
+                <a href="/algo">Algorithms</a>
+                <a href="/settings">Settings</a>
+            </div>
+            <div class="user-status">
+                <span class="status-indicator"></span>
+                <span>Live Data</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="app-layout">
+
+        <!-- LEFT: Stock List -->
+        <aside class="stock-sidebar glass">
+            <div class="sidebar-header">
+                <span>Watchlist</span>
+                <input type="text" id="search-input" placeholder="Search..." class="search-box">
+            </div>
+            <div id="stock-list" class="stock-list">
+                <div class="skeleton-list">
+                    <div class="skeleton"></div><div class="skeleton"></div>
+                    <div class="skeleton"></div><div class="skeleton"></div>
+                    <div class="skeleton"></div><div class="skeleton"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- CENTER: Chart -->
+        <main class="chart-area">
+            <div class="chart-header glass">
+                <div class="chart-title">
+                    <span id="chart-symbol" class="symbol-badge-lg">RELIANCE</span>
+                    <span id="chart-name" class="chart-company">Reliance Industries</span>
+                    <span id="live-badge" class="live-badge" style="display:none;">
+                        <span class="live-dot"></span>LIVE
+                    </span>
+                </div>
+                <div class="ohlcv-bar">
+                    <span>O <b id="stat-open">--</b></span>
+                    <span>H <b id="stat-high" class="positive">--</b></span>
+                    <span>L <b id="stat-low" class="negative">--</b></span>
+                    <span>C <b id="stat-close">--</b></span>
+                    <span>V <b id="stat-vol">--</b></span>
+                    <span id="live-price-wrap" style="display:none; margin-left:8px; padding-left:12px; border-left:1px solid rgba(255,255,255,0.1)">
+                        <b id="live-price" style="color:#22d3ee">--</b>
+                        <b id="live-change" style="margin-left:6px; font-size:0.8rem">--</b>
+                    </span>
+                </div>
+                <div class="period-btns">
+                    <button class="period-btn" data-p="1M">1M</button>
+                    <button class="period-btn" data-p="3M">3M</button>
+                    <button class="period-btn" data-p="6M">6M</button>
+                    <button class="period-btn active" data-p="1Y">1Y</button>
+                    <button class="period-btn" data-p="2Y">2Y</button>
+                    <button class="period-btn" data-p="ALL">ALL</button>
+                </div>
+            </div>
+
+            <div class="chart-toggles">
+                <label class="toggle-label"><input type="checkbox" id="toggle-ma20" checked> <span>MA20</span></label>
+                <label class="toggle-label"><input type="checkbox" id="toggle-ma50" checked> <span>MA50</span></label>
+                <label class="toggle-label"><input type="checkbox" id="toggle-pred" checked> <span>Forecast</span></label>
+            </div>
+
+            <div id="chart-container"></div>
+            <div id="volume-container"></div>
+        </main>
+
+        <!-- RIGHT: Prediction Panel -->
+        <aside class="pred-panel glass">
+            <div class="pred-header">
+                <span>AI Forecast</span>
+                <span id="pred-badge" class="pred-direction-badge">--</span>
+            </div>
+
+            <div class="pred-target-block">
+                <p class="pred-label">30-Day Target</p>
+                <p id="pred-target" class="pred-target-val">--</p>
+                <p id="pred-change" class="pred-change">--</p>
+            </div>
+
+            <div class="pred-confidence">
+                <div class="conf-label">
+                    <span>Model Confidence</span>
+                    <span id="conf-pct">--%</span>
+                </div>
+                <div class="conf-bar-bg">
+                    <div id="conf-bar" class="conf-bar" style="width:0%"></div>
+                </div>
+            </div>
+
+            <div class="pred-ohlc-grid">
+                <div class="pred-ohlc-item">
+                    <span class="pred-ohlc-label">Forecast Open</span>
+                    <span id="pred-open" class="pred-ohlc-val">--</span>
+                </div>
+                <div class="pred-ohlc-item">
+                    <span class="pred-ohlc-label">Forecast High</span>
+                    <span id="pred-high" class="pred-ohlc-val positive">--</span>
+                </div>
+                <div class="pred-ohlc-item">
+                    <span class="pred-ohlc-label">Forecast Low</span>
+                    <span id="pred-low" class="pred-ohlc-val negative">--</span>
+                </div>
+                <div class="pred-ohlc-item">
+                    <span class="pred-ohlc-label">Forecast Close</span>
+                    <span id="pred-close" class="pred-ohlc-val">--</span>
+                </div>
+            </div>
+
+            <div class="insights-block">
+                <p class="pred-label">Key Insights</p>
+                <ul id="insights-list" class="insights-list"></ul>
+            </div>
+        </aside>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

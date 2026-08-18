@@ -1,0 +1,4 @@
+  File "stockbot.py", line 170
+    usage = """Usage: stockbot.py [-h] [-t tradealgo] [-b startbuytime]
+               ^^^^^
+SyntaxError: invalid syntax
