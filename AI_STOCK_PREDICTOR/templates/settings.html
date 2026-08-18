@@ -114,37 +114,35 @@
             <p class="settings-sub">Configure API keys and trading parameters.</p>
         </div>
 
-        <!-- Alpha Vantage -->
+        <!-- Financial Modeling Prep (FMP) -->
         <div class="glass card-section">
             <div class="section-head">
-                <h2>Alpha Vantage — Real-Time API</h2>
+                <h2>Financial Modeling Prep (FMP) — Real-Time API</h2>
                 <span class="tag tag-green">LIVE QUOTES</span>
             </div>
             <p class="section-desc">
-                Powers real-time price, OHLC and volume on the chart.<br>
-                Free tier: 25 requests/day &nbsp;·&nbsp;
-                <a href="https://www.alphavantage.co/support/#api-key" target="_blank">Get a free key →</a>
+                Powers real-time market prices, OHLC data, and volume on the chart.<br>
+                <a href="https://site.financialmodelingprep.com/developer/docs" target="_blank">Financial Modeling Prep API Docs →</a>
             </p>
 
             <div class="field">
-                <label>API Key</label>
-                <input type="text" id="av-api-key" placeholder="e.g. ABCDEF1234567890">
+                <label>FMP API Key</label>
+                <input type="text" id="fmp-api-key" placeholder="e.g. 9joAuP6hxjLoeVR4I8z0wV892LZ5IMGn">
             </div>
 
-            <div id="av-status" class="status-box"></div>
+            <div id="fmp-status" class="status-box"></div>
 
             <div class="btn-row">
-                <button class="btn-primary" id="save-av-btn">Save Key</button>
-                <button class="btn-success" id="test-av-btn">Test Connection</button>
+                <button class="btn-primary" id="save-fmp-btn">Save Key</button>
+                <button class="btn-success" id="test-fmp-btn">Test Connection</button>
             </div>
 
             <div class="info-box">
                 <p>How it works</p>
                 <ul>
-                    <li>• Real-time quotes are fetched when you select a stock on the chart</li>
-                    <li>• Responses are cached for 5 min to protect your daily quota</li>
-                    <li>• Historical chart data always uses the local NSE dataset</li>
-                    <li>• NSE symbols are queried as <code>SYMBOL.BSE</code> on Alpha Vantage</li>
+                    <li>• Real-time quotes are fetched directly via FMP API when available</li>
+                    <li>• Automatic multi-tier failover (FMP → Alpha Vantage → Yahoo Finance → Local Dataset)</li>
+                    <li>• Responses are cached for 5 min to optimize performance</li>
                 </ul>
             </div>
         </div>
@@ -192,43 +190,43 @@
         fetch('/api/settings')
             .then(r => r.json())
             .then(d => {
-                if (d.AV_API_KEY) {
-                    document.getElementById('av-api-key').value = d.AV_API_KEY;
-                    setStatus('av-status', '✓ API key loaded from saved config.', true);
+                if (d.FMP_API_KEY) {
+                    document.getElementById('fmp-api-key').value = d.FMP_API_KEY;
+                    setStatus('fmp-status', '✓ FMP API key loaded from saved config.', true);
                 }
             })
-            .catch(() => setStatus('av-status', 'Could not reach server.', false));
+            .catch(() => setStatus('fmp-status', 'Could not reach server.', false));
 
         // ── save key ──────────────────────────────────────────────────────────
-        document.getElementById('save-av-btn').addEventListener('click', () => {
-            const key = document.getElementById('av-api-key').value.trim();
-            if (!key) { setStatus('av-status', 'Please enter an API key.', false); return; }
+        document.getElementById('save-fmp-btn').addEventListener('click', () => {
+            const key = document.getElementById('fmp-api-key').value.trim();
+            if (!key) { setStatus('fmp-status', 'Please enter an API key.', false); return; }
 
             fetch('/api/settings', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ AV_API_KEY: key })
+                body: JSON.stringify({ FMP_API_KEY: key })
             })
             .then(r => r.json())
             .then(d => {
-                if (d.status === 'success') setStatus('av-status', '✓ Key saved successfully.', true);
-                else setStatus('av-status', 'Error: ' + d.message, false);
+                if (d.status === 'success') setStatus('fmp-status', '✓ FMP API Key saved successfully.', true);
+                else setStatus('fmp-status', 'Error: ' + d.message, false);
             })
-            .catch(() => setStatus('av-status', 'Failed to reach server.', false));
+            .catch(() => setStatus('fmp-status', 'Failed to reach server.', false));
         });
 
         // ── test connection ───────────────────────────────────────────────────
-        document.getElementById('test-av-btn').addEventListener('click', () => {
-            setStatus('av-status', 'Testing connection…', true);
+        document.getElementById('test-fmp-btn').addEventListener('click', () => {
+            setStatus('fmp-status', 'Testing connection…', true);
             fetch('/api/realtime/RELIANCE')
                 .then(r => r.json())
                 .then(d => {
-                    if (d.error) setStatus('av-status', '✗ ' + d.error, false);
-                    else setStatus('av-status',
-                        `✓ Connected — RELIANCE.BSE  ₹${d.price.toFixed(2)}  (${d.change_pct >= 0 ? '+' : ''}${parseFloat(d.change_pct).toFixed(2)}%)  as of ${d.latest_day}`,
+                    if (d.error) setStatus('fmp-status', '✗ ' + d.error, false);
+                    else setStatus('fmp-status',
+                        `✓ Connected — ${d.av_symbol || d.symbol}  ₹${d.price.toFixed(2)}  (${d.change_pct >= 0 ? '+' : ''}${parseFloat(d.change_pct).toFixed(2)}%)  [via ${d.source || 'Realtime API'}]`,
                         true);
                 })
-                .catch(() => setStatus('av-status', '✗ Request failed. Is the server running?', false));
+                .catch(() => setStatus('fmp-status', '✗ Request failed. Is the server running?', false));
         });
 
         // ── risk params (saved to localStorage for now) ───────────────────────

@@ -50,10 +50,10 @@ function initChart() {
         if (!param.time || !param.seriesData) return;
         const d = param.seriesData.get(candleSeries);
         if (d) {
-            document.getElementById('stat-open').textContent  = '$' + d.open.toFixed(2);
-            document.getElementById('stat-high').textContent  = '$' + d.high.toFixed(2);
-            document.getElementById('stat-low').textContent   = '$' + d.low.toFixed(2);
-            document.getElementById('stat-close').textContent = '$' + d.close.toFixed(2);
+            document.getElementById('stat-open').textContent  = '₹' + d.open.toFixed(2);
+            document.getElementById('stat-high').textContent  = '₹' + d.high.toFixed(2);
+            document.getElementById('stat-low').textContent   = '₹' + d.low.toFixed(2);
+            document.getElementById('stat-close').textContent = '₹' + d.close.toFixed(2);
         }
         const v = param.seriesData.get(volSeries);
         if (v) document.getElementById('stat-vol').textContent = fmtVol(v.value);
@@ -95,10 +95,10 @@ async function loadChart(symbol, period) {
     const last = data.candles[data.candles.length - 1];
     document.getElementById('chart-symbol').textContent = symbol;
     document.getElementById('chart-name').textContent   = data.name;
-    document.getElementById('stat-open').textContent    = '$' + last.open.toFixed(2);
-    document.getElementById('stat-high').textContent    = '$' + last.high.toFixed(2);
-    document.getElementById('stat-low').textContent     = '$' + last.low.toFixed(2);
-    document.getElementById('stat-close').textContent   = '$' + last.close.toFixed(2);
+    document.getElementById('stat-open').textContent    = '₹' + last.open.toFixed(2);
+    document.getElementById('stat-high').textContent    = '₹' + last.high.toFixed(2);
+    document.getElementById('stat-low').textContent     = '₹' + last.low.toFixed(2);
+    document.getElementById('stat-close').textContent   = '₹' + last.close.toFixed(2);
     document.getElementById('stat-vol').textContent     = fmtVol(last.volume);
 
     chart.timeScale().fitContent();
@@ -106,7 +106,7 @@ async function loadChart(symbol, period) {
     fetchLiveQuote(symbol);
 }
 
-// ── Live quote (Alpha Vantage) ───────────────────────────────────────────────
+// ── Live quote (Alpha Vantage / FMP / Yahoo) ─────────────────────────────────
 async function fetchLiveQuote(symbol) {
     if (liveRefreshTimer) clearInterval(liveRefreshTimer);
 
@@ -127,18 +127,35 @@ async function fetchLiveQuote(symbol) {
 
             document.getElementById('live-badge').style.display      = 'inline-flex';
             document.getElementById('live-price-wrap').style.display = 'inline';
-            document.getElementById('live-price').textContent        = '\u20b9' + data.price.toFixed(2);
+            document.getElementById('live-price').textContent        = '₹' + data.price.toFixed(2);
 
             const chgEl = document.getElementById('live-change');
             chgEl.textContent = `${sign}${pct.toFixed(2)}%`;
             chgEl.style.color = isUp ? '#10b981' : '#ef4444';
 
             // overwrite OHLCV bar with live values
-            document.getElementById('stat-open').textContent  = '\u20b9' + data.open.toFixed(2);
-            document.getElementById('stat-high').textContent  = '\u20b9' + data.high.toFixed(2);
-            document.getElementById('stat-low').textContent   = '\u20b9' + data.low.toFixed(2);
-            document.getElementById('stat-close').textContent = '\u20b9' + data.price.toFixed(2);
+            document.getElementById('stat-open').textContent  = '₹' + data.open.toFixed(2);
+            document.getElementById('stat-high').textContent  = '₹' + data.high.toFixed(2);
+            document.getElementById('stat-low').textContent   = '₹' + data.low.toFixed(2);
+            document.getElementById('stat-close').textContent = '₹' + data.price.toFixed(2);
             document.getElementById('stat-vol').textContent   = fmtVol(data.volume);
+
+            // update live candle on chart
+            if (data.latest_day) {
+                const liveCandle = {
+                    time:  data.latest_day,
+                    open:  data.open || data.price,
+                    high:  data.high || data.price,
+                    low:   data.low  || data.price,
+                    close: data.price
+                };
+                candleSeries.update(liveCandle);
+                volSeries.update({
+                    time:  data.latest_day,
+                    value: data.volume,
+                    color: liveCandle.close >= liveCandle.open ? 'rgba(16,185,129,0.4)' : 'rgba(239,68,68,0.4)'
+                });
+            }
         } catch (_) { /* fail silently */ }
     };
 
@@ -157,7 +174,7 @@ function updatePredPanel(pred, currentClose) {
     badge.textContent = isUp ? '▲ BULLISH' : '▼ BEARISH';
     badge.className   = 'pred-direction-badge ' + (isUp ? 'up' : 'down');
 
-    document.getElementById('pred-target').textContent = '$' + target.toFixed(2);
+    document.getElementById('pred-target').textContent = '₹' + target.toFixed(2);
     const chgEl = document.getElementById('pred-change');
     chgEl.textContent = (change >= 0 ? '+' : '') + change.toFixed(2) + ' (' + (change >= 0 ? '+' : '') + changePct + '%)';
     chgEl.className   = 'pred-change ' + (isUp ? 'positive' : 'negative');
@@ -166,19 +183,19 @@ function updatePredPanel(pred, currentClose) {
     document.getElementById('conf-bar').style.width = pred.confidence + '%';
 
     const lastIdx = pred.close.length - 1;
-    document.getElementById('pred-open').textContent  = '$' + pred.open[lastIdx].toFixed(2);
-    document.getElementById('pred-high').textContent  = '$' + pred.high[lastIdx].toFixed(2);
-    document.getElementById('pred-low').textContent   = '$' + pred.low[lastIdx].toFixed(2);
-    document.getElementById('pred-close').textContent = '$' + pred.close[lastIdx].toFixed(2);
+    document.getElementById('pred-open').textContent  = '₹' + pred.open[lastIdx].toFixed(2);
+    document.getElementById('pred-high').textContent  = '₹' + pred.high[lastIdx].toFixed(2);
+    document.getElementById('pred-low').textContent   = '₹' + pred.low[lastIdx].toFixed(2);
+    document.getElementById('pred-close').textContent = '₹' + pred.close[lastIdx].toFixed(2);
 
     // insights
     const insights = [
-        `30-day price target: <b>$${target.toFixed(2)}</b>`,
+        `30-day price target: <b>₹${target.toFixed(2)}</b>`,
         `Expected move: <b>${(change >= 0 ? '+' : '') + changePct}%</b> from current price`,
         `Model confidence: <b>${pred.confidence}%</b>`,
         `Trend direction: <b>${isUp ? 'Upward momentum' : 'Downward pressure'}</b>`,
-        `Forecast high: <b>$${Math.max(...pred.high).toFixed(2)}</b>`,
-        `Forecast low: <b>$${Math.min(...pred.low).toFixed(2)}</b>`,
+        `Forecast high: <b>₹${Math.max(...pred.high).toFixed(2)}</b>`,
+        `Forecast low: <b>₹${Math.min(...pred.low).toFixed(2)}</b>`,
     ];
     document.getElementById('insights-list').innerHTML = insights.map(i => `<li>${i}</li>`).join('');
 }
@@ -199,7 +216,7 @@ function renderStockList(stocks) {
                 <div class="co">${s.name.split(' ')[0]}</div>
             </div>
             <div class="stock-item-right">
-                <div class="price">$${s.price.toFixed(2)}</div>
+                <div class="price">₹${s.price.toFixed(2)}</div>
                 <div class="chg ${s.change_pct >= 0 ? 'positive' : 'negative'}">${s.change_pct >= 0 ? '+' : ''}${s.change_pct}%</div>
             </div>
         </div>
